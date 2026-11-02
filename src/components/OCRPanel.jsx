@@ -1,43 +1,16 @@
-import Tesseract from "tesseract.js";
+export default function OCRPanel({ text, setText }) {
+  return (
+    <div className="rounded-2xl border border-slate-700 bg-slate-800 p-6 shadow-lg">
+      <h2 className="mb-4 text-2xl font-semibold">
+        📄 OCR Result
+      </h2>
 
-async function prepareImage(file) {
-  return new Promise((resolve) => {
-    const img = new Image();
-
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      const scale = 3;
-
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      resolve(canvas);
-    };
-
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-export async function extractText(file) {
-  const canvas = await prepareImage(file);
-
-  const result = await Tesseract.recognize(
-    canvas,
-    "eng",
-    {
-      logger: (m) => console.log(m),
-    }
+      <textarea
+        rows={20}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="w-full rounded-xl border border-slate-600 bg-slate-900 p-4 text-slate-100"
+      />
+    </div>
   );
-
-  return result.data.text;
 }
